@@ -1,4 +1,4 @@
 modrsswitch
 ===========
 
-Linux Kernel Module for controlling remote socket switches
+Raspberry Pi Linux Kernel Module for controlling remote socket switches.
