@@ -373,19 +373,20 @@ static int __init modrsswitch_init(void) /* Constructor */
 		}
 	}
 
-	if (i != 0xFF) {
+	if (i != 0xff) {
+		send_pin = GPIO4;
 		pr_err("modrss: GPIO %d not supported, using default GPIO %d\n",
 		       send_pin, GPIO4);
-		send_pin = GPIO4;
 	}
 
 	/* Register GPIO and set to LOW */
 	ret = gpio_request_one(send_pin, GPIOF_OUT_INIT_LOW, "send_pin");
-	pr_err("modrss: Using GPIO %d\n", send_pin);
 	if (ret) {
 		pr_err("Unable to request GPIO: %d\n", ret);
 		return ret;
 	}
+
+	pr_info("modrss: Using GPIO %d\n", send_pin);
 
 	return 0;
 }
