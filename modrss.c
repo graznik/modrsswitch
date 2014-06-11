@@ -13,9 +13,9 @@
 #include <linux/uaccess.h>
 #include <linux/moduleparam.h>
 
-#define GPIO4 4
-#define HIGH  1
-#define LOW   0
+#define GPIO4  4
+#define HIGH   1
+#define LOW    0
 #define REPEAT 3
 
 /*
@@ -136,7 +136,7 @@ static int pt2260_init(struct Encoder *pt2260)
 	pt2260->ngroups = 4;
 	pt2260->groups = kmalloc(pt2260->ngroups * sizeof(char *), GFP_KERNEL);
 	if (pt2260->groups == NULL) {
-		pr_info("Error: Cannot malloc\n");
+		pr_err("modrss: Cannot kmalloc\n");
 		return -1;
 	}
 	/* Three possible switches per group */
@@ -144,7 +144,7 @@ static int pt2260_init(struct Encoder *pt2260)
 	pt2260->sockets = kmalloc(pt2260->nsockets * sizeof(char *),
 				  GFP_KERNEL);
 	if (pt2260->sockets == NULL) {
-		pr_info("Error: Cannot malloc\n");
+		pr_err("modrss: Cannot kmalloc\n");
 		return -1;
 	}
 
@@ -152,7 +152,7 @@ static int pt2260_init(struct Encoder *pt2260)
 	pt2260->ndata = 2;
 	pt2260->data = kmalloc(pt2260->ndata * sizeof(char *), GFP_KERNEL);
 	if (pt2260->data == NULL) {
-		pr_info("Error: Cannot malloc\n");
+		pr_err("modrss: Cannot kmalloc\n");
 		return -1;
 	}
 
@@ -186,7 +186,7 @@ static int pt2262_init(struct Encoder *pt2262)
 	pt2262->ngroups = 16;
 	pt2262->groups = kmalloc(pt2262->ngroups * sizeof(char *), GFP_KERNEL);
 	if (pt2262->groups == NULL) {
-		pr_info("Error: Cannot malloc\n");
+		pr_err("modrss: Cannot kmalloc\n");
 		return -1;
 	}
 
@@ -195,7 +195,7 @@ static int pt2262_init(struct Encoder *pt2262)
 	pt2262->sockets = kmalloc(pt2262->nsockets * sizeof(char *),
 				  GFP_KERNEL);
 	if (pt2262->sockets == NULL) {
-		pr_info("Error: Cannot malloc\n");
+		pr_err("modrss: Cannot kmalloc\n");
 		return -1;
 	}
 
@@ -203,7 +203,7 @@ static int pt2262_init(struct Encoder *pt2262)
 	pt2262->ndata = 2;
 	pt2262->data = kmalloc(pt2262->ndata * sizeof(char *), GFP_KERNEL);
 	if (pt2262->data == NULL) {
-		pr_info("Error: Cannot malloc\n");
+		pr_err("modrss: Cannot kmalloc\n");
 		return -1;
 	}
 
@@ -260,6 +260,9 @@ static int socket_send(uint dev, uint group, uint socket, uint data)
 	case 1:
 		pt2262_init(&encoder);
 		break;
+	default:
+		pr_err("modrss: Unknown encoder type.\n");
+		return -1;
 	}
 
 	socket_ctrl(&encoder, group, socket, data);
@@ -382,7 +385,7 @@ static int __init modrsswitch_init(void) /* Constructor */
 	/* Register GPIO and set to LOW */
 	ret = gpio_request_one(send_pin, GPIOF_OUT_INIT_LOW, "send_pin");
 	if (ret) {
-		pr_err("Unable to request GPIO: %d\n", ret);
+		pr_err("modrss: Unable to request GPIO: %d\n", ret);
 		return ret;
 	}
 
