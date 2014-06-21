@@ -108,12 +108,15 @@ static void send_tris(char *codeword)
 		switch (codeword[i]) {
 		case '0':
 			send_0();
+			pr_debug("modrss: send_0()\n");
 			break;
 		case '1':
 			send_1();
+			pr_debug("modrss: send_1()\n");
 			break;
 		case 'F':
 			send_f();
+			pr_debug("modrss: send_F()\n");
 			break;
 		}
 		i++;
@@ -242,6 +245,8 @@ static int socket_ctrl(struct Encoder *enc, uint group, uint socket, uint data)
 		 enc->sockets[socket],
 		 enc->data[data]);
 
+	pr_debug("codeword: %s\n", codeword);
+
 	/* Send the codeword */
 	for (i = 0; i < REPEAT; i++)
 		send_tris(codeword);
@@ -298,7 +303,7 @@ static ssize_t driver_write(struct file *f, const char __user *ubuf,
 		return -ENOMEM;
 
 	if (copy_from_user(kbuf, ubuf, len)) {
-		pr_info("Error: Unable to read user input\n");
+		pr_err("Error: Unable to read user input\n");
 		return -EFAULT;
 	}
 
@@ -318,8 +323,8 @@ static ssize_t driver_write(struct file *f, const char __user *ubuf,
 		}
 	}
 
-	pr_info("socket_ctrl(%d, %d, %d, %d)\n", (uint)kbuf[0],
-		(uint)kbuf[1], (uint)kbuf[2], (uint)kbuf[3]);
+	pr_debug("modrss: socket_ctrl(%d, %d, %d, %d)\n", (uint)kbuf[0],
+		 (uint)kbuf[1], (uint)kbuf[2], (uint)kbuf[3]);
 
 	socket_send((uint)kbuf[0], (uint)kbuf[1], (uint)kbuf[2], (uint)kbuf[3]);
 
@@ -336,7 +341,7 @@ static const struct file_operations fops = {
 
 static int __init modrsswitch_init(void)
 {
-	pr_info("modrsswitch: Module registered");
+	pr_debug("modrss: Module registered");
 
 	/* cat /proc/devices | grep rsswitch */
 	if (alloc_chrdev_region(&rsswitch_dev, 0, 1, "rsswitch") < 0)
@@ -388,7 +393,7 @@ static int __init modrsswitch_init(void)
 		return ret;
 	}
 
-	pr_info("modrss: Using GPIO %d\n", send_pin);
+	pr_debug("modrss: Using GPIO %d\n", send_pin);
 
 	return 0;
 }
@@ -402,7 +407,7 @@ static void __exit modrsswitch_exit(void)
 	device_destroy(cl, rsswitch_dev);
 	class_destroy(cl);
 	unregister_chrdev_region(rsswitch_dev, 1);
-	pr_info("modrss: Module unregistered");
+	pr_debug("modrss: Module unregistered");
 }
 
 module_init(modrsswitch_init);
