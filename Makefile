@@ -1,5 +1,8 @@
+# Enable pr_debug() output
+CFLAGS_modrss.o := -DDEBUG
+
 ifneq ($(KERNELRELEASE),)
-        obj-m := modrss.o
+	obj-m := modrss.o
 
 else
 	KERNELDIR ?= ./linux
