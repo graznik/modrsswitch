@@ -291,6 +291,7 @@ static ssize_t driver_write(struct file *f, const char __user *ubuf,
 {
 	char *kbuf;
 	uint encoder, group, socket, data;
+	int stat, i, data_len;
 
 	kbuf = kmalloc(len, GFP_KERNEL);
 	if (!kbuf)
@@ -301,28 +302,26 @@ static ssize_t driver_write(struct file *f, const char __user *ubuf,
 		return -EFAULT;
 	}
 
-	if (!isdigit(kbuf[0]))
-		return -1;
-	else
-		encoder = (uint)(kbuf[0] - 0x30);
+	data_len = strlen(kbuf) - 1;
 
-	if (!isdigit(kbuf[1]))
-		return -1;
-	else
-		group = (uint)(kbuf[1] - 0x30);
+	/* Check for valid hex values from user space */
+	for (i = 0; i < data_len; i++) {
+		if ((kbuf[i] >= 'a') && (kbuf[i] <= 'f')) {
+			kbuf[i] = kbuf[i] - 'a';
+		} else if ((kbuf[i] >= 'A') && (kbuf[i] <= 'F')) {
+			kbuf[i] = kbuf[i] - 'A';
+		} else if ((kbuf[i] >= '0') && (kbuf[i] <= '9')) {
+			kbuf[i] = kbuf[i] - '0';
+		} else {
+			pr_err("modrss: Only characters 0-9, a-f, and A-F.\n");
+			return -1;
+		}
+	}
 
-	if (!isdigit(kbuf[2]))
-		return -1;
-	else
-		socket = (uint)(kbuf[2] - 0x30);
+	pr_info("socket_ctrl(%d, %d, %d, %d)\n", (uint)kbuf[0],
+		(uint)kbuf[1], (uint)kbuf[2], (uint)kbuf[3]);
 
-	if (!isdigit(kbuf[3]))
-		return -1;
-	else
-		data = (uint)(kbuf[3] - 0x30);
-
-	pr_info("socket_send(%d, %d, %d, %d)\n", encoder, group, socket, data);
-	socket_send(encoder, group, socket, data);
+	socket_send((uint)kbuf[0], (uint)kbuf[1], (uint)kbuf[2], (uint)kbuf[3]);
 
 	return len;
 }
