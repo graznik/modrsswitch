@@ -13,10 +13,10 @@
 #include <linux/uaccess.h>
 #include <linux/moduleparam.h>
 
-#define GPIO4  4
+#define GPIO4  4  /* The default GPIO pin */
+#define REPEAT 1  /* Times to repeat the codeword */
 #define HIGH   1
 #define LOW    0
-#define REPEAT 3
 
 /*
  * Each encoder chip used in the power socket remote controls can be described
@@ -334,7 +334,7 @@ static const struct file_operations fops = {
 	.write   = driver_write
 };
 
-static int __init modrsswitch_init(void) /* Constructor */
+static int __init modrsswitch_init(void)
 {
 	pr_info("modrsswitch: Module registered");
 
@@ -393,7 +393,7 @@ static int __init modrsswitch_init(void) /* Constructor */
 	return 0;
 }
 
-static void __exit modrsswitch_exit(void) /* Destructor */
+static void __exit modrsswitch_exit(void)
 {
 	gpio_set_value(send_pin, 0);
 	gpio_free(send_pin);
