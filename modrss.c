@@ -9,6 +9,7 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/slab.h>
+#include <linux/time.h>
 #include <linux/types.h>
 #include <linux/uaccess.h>
 #include <linux/moduleparam.h>
@@ -38,7 +39,6 @@ static struct class *cl;     /* Device class          */
 
 /* The 433 MHz sender must be connected to of these pins */
 static uint valid_gpios[] = {4, 17, 21, 22, 23, 24, 25};
-static uint nvalid = sizeof(valid_gpios) / sizeof(uint);
 
 static int send_pin = GPIO4; /* The default pin */
 module_param(send_pin, int, 0644);
@@ -341,6 +341,8 @@ static const struct file_operations fops = {
 
 static int __init modrsswitch_init(void)
 {
+	int ret, i, valid;
+
 	pr_debug("modrss: Module registered");
 
 	/* cat /proc/devices | grep rsswitch */
@@ -371,16 +373,16 @@ static int __init modrsswitch_init(void)
 		return -1;
 	}
 
-	int ret, i;
+	valid = 0;
 	/* Check for valid GPIO */
-	for (i = 0; i < nvalid; i++) {
+	for (i = 0; i < ARRAY_SIZE(valid_gpios); i++) {
 		if (send_pin == valid_gpios[i]) {
-			i = 0xff;
+			valid = 1;
 			break;
 		}
 	}
 
-	if (i != 0xff) {
+	if (valid) {
 		send_pin = GPIO4;
 		pr_err("modrss: GPIO %d not supported, using default GPIO %d\n",
 		       send_pin, GPIO4);
