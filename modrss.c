@@ -367,8 +367,8 @@ static int __init modrsswitch_init(void)
 
 	if (valid) {
 		send_pin = GPIO4;
-		pr_err("modrss: GPIO %d not supported, using default GPIO %d\n",
-		       send_pin, GPIO4);
+		pr_err("modrss: No or unsupported GPIO parameter," \
+		       "using default GPIO %d\n", GPIO4);
 	}
 
 	/* Register GPIO and set to LOW */
