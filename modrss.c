@@ -39,7 +39,7 @@ static dev_t rsswitch_dev;   /* Device number         */
 static struct cdev c_dev;    /* Char device structure */
 static struct class *cl;     /* Device class          */
 
-/* The 433 MHz sender must be connected to of these pins */
+/* The 433 MHz sender must be connected to one of these pins */
 static uint valid_gpios[] = {4, 17, 21, 22, 23, 24, 25};
 
 static int send_pin = GPIO4; /* The default pin */
