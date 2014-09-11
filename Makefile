@@ -5,7 +5,7 @@ ifneq ($(KERNELRELEASE),)
 	obj-m := modrss.o
 
 else
-	KERNELDIR ?= ./linux
+	KERNELDIR ?= ~/hackstock/kernelbuild/linux-rpi
 	PWD := $(shell pwd)
 endif
 
