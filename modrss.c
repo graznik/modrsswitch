@@ -13,6 +13,8 @@
 #include <linux/types.h>
 #include <linux/uaccess.h>
 #include <linux/moduleparam.h>
+#include <linux/miscdevice.h>
+
 
 #define GPIO4  4  /* The default GPIO pin */
 #define REPEAT 1  /* Times to repeat the codeword */
@@ -130,9 +132,9 @@ static void send_tris(char *codeword)
  */
 static int pt2260_init(struct Encoder *pt2260)
 {
-	static const char * const groups[]  = {"1FFF", "F1FF", "FF1F", "FFF1"};
-	static const char * const sockets[] = {"1FF0", "F1F0", "FF10"};
-	static const char * const data[]    = {"0001", "0010"};
+	char * const groups[]  = {"1FFF", "F1FF", "FF1F", "FFF1"};
+	char * const sockets[] = {"1FF0", "F1F0", "FF10"};
+	char * const data[]    = {"0001", "0010"};
 	int i;
 
 	/* Four possible switch groups */
@@ -177,12 +179,12 @@ static int pt2260_init(struct Encoder *pt2260)
  */
 static int pt2262_init(struct Encoder *pt2262)
 {
-	static const char * const groups[]   = {"FFFF", "0FFF", "F0FF", "00FF",
+	char * const groups[]   = {"FFFF", "0FFF", "F0FF", "00FF",
 						"FF0F", "0F0F", "F00F", "000F",
 						"FFF0", "0FF0", "F0F0", "00F0",
 						"FF00", "0F00", "F000", "0000"};
-	static const char * const sockets[]  = {"F0FF", "FF0F", "FFF0", "FFFF"};
-	static const char * const data[]     = {"FFF0", "FF0F"};
+	char * const sockets[]  = {"F0FF", "FF0F", "FFF0", "FFFF"};
+	char * const data[]     = {"FFF0", "FF0F"};
 	int i;
 
 	/* 16 possible switch groups (A-P in Intertechno code) */
@@ -304,10 +306,11 @@ static ssize_t driver_write(struct file *f, const char __user *ubuf,
 
 	if (copy_from_user(kbuf, ubuf, len)) {
 		pr_err("Error: Unable to read user input\n");
+		kfree(kbuf);
 		return -EFAULT;
 	}
 
-	data_len = strlen(kbuf) - 1;
+	data_len = strlen(kbuf);
 
 	/* Check for valid hex values from user space */
 	for (i = 0; i < data_len; i++) {
@@ -339,39 +342,19 @@ static const struct file_operations fops = {
 	.write   = driver_write
 };
 
+static struct miscdevice modrss_dev = {
+	.minor = MISC_DYNAMIC_MINOR,
+	.name = "rsswitch",
+	.fops = &fops
+};
+
 static int __init modrsswitch_init(void)
 {
 	int ret, i, valid;
 
 	pr_debug("modrss: Module registered");
 
-	/* cat /proc/devices | grep rsswitch */
-	if (alloc_chrdev_region(&rsswitch_dev, 0, 1, "rsswitch") < 0)
-		return -1;
-
-	/* ll /sys/class/chardrv */
-	cl = class_create(THIS_MODULE, "chardrv");
-	if (cl == NULL) {
-		unregister_chrdev_region(rsswitch_dev, 1);
-		return -1;
-	}
-
-	/* ls /dev | grep rsswitch */
-	if (device_create(cl, NULL, rsswitch_dev, NULL,
-			  "rsswitch") == ERR_PTR) {
-		class_destroy(cl);
-		unregister_chrdev_region(rsswitch_dev, 1);
-		return -1;
-	}
-
-	cdev_init(&c_dev, &fops);
-
-	if (cdev_add(&c_dev, rsswitch_dev, 1) == -1) {
-		device_destroy(cl, rsswitch_dev);
-		class_destroy(cl);
-		unregister_chrdev_region(rsswitch_dev, 1);
-		return -1;
-	}
+	misc_register(&modrss_dev);
 
 	valid = 0;
 	/* Check for valid GPIO */
