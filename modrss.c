@@ -106,15 +106,12 @@ static void send_tris(char *codeword)
 		switch (codeword[i]) {
 		case '0':
 			send_0();
-			pr_debug("modrss: send_0()\n");
 			break;
 		case '1':
 			send_1();
-			pr_debug("modrss: send_1()\n");
 			break;
 		case 'F':
 			send_f();
-			pr_debug("modrss: send_F()\n");
 			break;
 		}
 		i++;
