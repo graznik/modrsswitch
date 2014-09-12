@@ -35,10 +35,6 @@ struct Encoder {
 	uint pulse_len;   /* This might differ                  */
 };
 
-static dev_t rsswitch_dev;   /* Device number         */
-static struct cdev c_dev;    /* Char device structure */
-static struct class *cl;     /* Device class          */
-
 /* The 433 MHz sender must be connected to one of these pins */
 static uint valid_gpios[] = {4, 17, 21, 22, 23, 24, 25};
 
@@ -49,7 +45,7 @@ MODULE_PARM_DESC(send_pin, "GPIO the 433 MHz sender is connected to");
 static void transmit(int nhigh, int nlow)
 {
 	/*
-	 * FIXME: 350 is the pulse length in us. his should be a parameter in
+	 * FIXME: 350 is the pulse length in us. This should be a parameter in
 	 * the future, depending on the encoder chip within the remote control.
 	 */
 	gpio_set_value(send_pin, HIGH);
@@ -68,6 +64,7 @@ static void send_0(void)
 	transmit(1, 3);
 	transmit(1, 3);
 }
+
 /**
  * Sends a Tri-State "1" Bit
  *            ___   ___
@@ -97,7 +94,6 @@ static void send_f(void)
  *                       _
  * Waveform Protocol 2: | |__________
  */
-
 static void send_sync(void)
 {
 	transmit(1, 31);
@@ -180,9 +176,9 @@ static int pt2260_init(struct Encoder *pt2260)
 static int pt2262_init(struct Encoder *pt2262)
 {
 	char * const groups[]   = {"FFFF", "0FFF", "F0FF", "00FF",
-						"FF0F", "0F0F", "F00F", "000F",
-						"FFF0", "0FF0", "F0F0", "00F0",
-						"FF00", "0F00", "F000", "0000"};
+				   "FF0F", "0F0F", "F00F", "000F",
+				   "FFF0", "0FF0", "F0F0", "00F0",
+				   "FF00", "0F00", "F000", "0000"};
 	char * const sockets[]  = {"F0FF", "FF0F", "FFF0", "FFFF"};
 	char * const data[]     = {"FFF0", "FF0F"};
 	int i;
@@ -234,14 +230,15 @@ static int pt2262_init(struct Encoder *pt2262)
 static int socket_ctrl(struct Encoder *enc, uint group, uint socket, uint data)
 {
 	int i;
+	size_t s;
+	char codeword[s];
 
 	/* Calculate the codeword size */
-	size_t s = strlen(enc->groups[group]) +
+	s = strlen(enc->groups[group]) +
 		strlen(enc->sockets[socket]) +
 		strlen(enc->data[data]);
 
 	/* Generate the codeword including '\0' */
-	char codeword[s];
 	snprintf(codeword, s + 1, "%s%s%s",
 		 enc->groups[group],
 		 enc->sockets[socket],
@@ -274,22 +271,6 @@ static int socket_send(uint dev, uint group, uint socket, uint data)
 
 	socket_ctrl(&encoder, group, socket, data);
 
-	return 0;
-}
-
-static int driver_open(struct inode *i, struct file *f)
-{
-	return 0;
-}
-
-static int driver_close(struct inode *i, struct file *f)
-{
-	return 0;
-}
-
-static ssize_t driver_read(struct file *f, char __user *ubuf, size_t len,
-			   loff_t *off)
-{
 	return 0;
 }
 
@@ -336,9 +317,6 @@ static ssize_t driver_write(struct file *f, const char __user *ubuf,
 
 static const struct file_operations fops = {
 	.owner   = THIS_MODULE,
-	.open    = driver_open,
-	.release = driver_close,
-	.read    = driver_read,
 	.write   = driver_write
 };
 
