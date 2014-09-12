@@ -16,11 +16,11 @@
 #include <linux/miscdevice.h>
 
 
-#define GPIO4  4  /* The default GPIO pin */
-#define REPEAT 1  /* Times to repeat the codeword */
-#define HIGH   1
-#define LOW    0
-
+#define GPIO4     4  /* The default GPIO pin */
+#define REPEAT    1  /* Times to repeat the codeword */
+#define HIGH      1
+#define LOW       0
+#define PULSE_LEN 350
 /*
  * Each encoder chip used in the power socket remote controls can be described
  * with the following struct.
@@ -45,13 +45,13 @@ MODULE_PARM_DESC(send_pin, "GPIO the 433 MHz sender is connected to");
 static void transmit(int nhigh, int nlow)
 {
 	/*
-	 * FIXME: 350 is the pulse length in us. This should be a parameter in
+	 * FIXME: PULSE_LEN is the pulse length in us. This should be a parameter in
 	 * the future, depending on the encoder chip within the remote control.
 	 */
 	gpio_set_value(send_pin, HIGH);
-	udelay(350 * nhigh);
+	udelay(PULSE_LEN * nhigh);
 	gpio_set_value(send_pin, LOW);
-	udelay(350 * nlow);
+	udelay(PULSE_LEN * nlow);
 }
 
 /**
