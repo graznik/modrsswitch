@@ -388,10 +388,8 @@ static void __exit modrsswitch_exit(void)
 	gpio_set_value(send_pin, 0);
 	gpio_free(send_pin);
 
-	cdev_del(&c_dev);
-	device_destroy(cl, rsswitch_dev);
-	class_destroy(cl);
-	unregister_chrdev_region(rsswitch_dev, 1);
+	misc_deregister(&modrss_dev);
+
 	pr_debug("modrss: Module unregistered");
 }
 
