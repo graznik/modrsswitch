@@ -45,9 +45,10 @@ MODULE_PARM_DESC(send_pin, "GPIO the 433 MHz sender is connected to");
 static void transmit(int nhigh, int nlow)
 {
 	/*
-	 * FIXME: PULSE_LEN is the pulse length in us. This should be a parameter in
-	 * the future, depending on the encoder chip within the remote control.
-	 */
+	 * FIXME: PULSE_LEN is the pulse length in us. This should be a
+	 parameter in the future, depending on the encoder chip within
+	 the remote control.
+	*/
 	gpio_set_value(send_pin, HIGH);
 	udelay(PULSE_LEN * nhigh);
 	gpio_set_value(send_pin, LOW);
@@ -342,8 +343,7 @@ static int __init modrsswitch_init(void)
 
 	if (valid) {
 		send_pin = GPIO4;
-		pr_err("modrss: No or unsupported GPIO parameter," \
-		       "using default GPIO %d\n", GPIO4);
+		pr_err("modrss: using default GPIO %d\n", GPIO4);
 	}
 
 	/* Register GPIO and set to LOW */
