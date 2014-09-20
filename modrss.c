@@ -103,6 +103,9 @@ static void send_sync(void)
 static void send_tris(char *codeword)
 {
 	int i = 0;
+	unsigned long flags;
+
+	local_irq_save(flags);
 	while (codeword[i] != '\0') {
 		switch (codeword[i]) {
 		case '0':
@@ -118,6 +121,7 @@ static void send_tris(char *codeword)
 		i++;
 	}
 	send_sync();
+	local_irq_restore(flags);
 }
 
 /**
