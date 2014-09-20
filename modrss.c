@@ -229,12 +229,14 @@ static int socket_ctrl(struct Encoder *enc, uint group, uint socket, uint data)
 {
 	int i;
 	size_t s;
-	char codeword[s];
+	char *codeword;
 
 	/* Calculate the codeword size */
 	s = strlen(enc->groups[group]) +
 		strlen(enc->sockets[socket]) +
 		strlen(enc->data[data]);
+
+	codeword = kmalloc(s + 1, GFP_KERNEL);
 
 	/* Generate the codeword including '\0' */
 	snprintf(codeword, s + 1, "%s%s%s",
@@ -277,7 +279,7 @@ static ssize_t driver_write(struct file *f, const char __user *ubuf,
 {
 	char *kbuf;
 	uint encoder, group, socket, data;
-	int stat, i, data_len;
+	int i, data_len;
 
 	kbuf = kmalloc(len, GFP_KERNEL);
 	if (!kbuf)
