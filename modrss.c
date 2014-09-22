@@ -289,7 +289,7 @@ static ssize_t driver_write(struct file *f, const char __user *ubuf,
 	if (!kbuf)
 		return -ENOMEM;
 
-	if (copy_from_user(kbuf, ubuf, len)) {
+	if (simple_write_to_buffer(kbuf, len, off, ubuf, len) < 0) {
 		pr_err("Error: Unable to read user input\n");
 		kfree(kbuf);
 		return -EFAULT;
