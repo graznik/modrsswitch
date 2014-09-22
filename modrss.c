@@ -321,13 +321,13 @@ static ssize_t driver_write(struct file *f, const char __user *ubuf,
 
 static const struct file_operations fops = {
 	.owner   = THIS_MODULE,
-	.write   = driver_write
+	.write   = driver_write,
 };
 
 static struct miscdevice modrss_dev = {
 	.minor = MISC_DYNAMIC_MINOR,
 	.name = "rsswitch",
-	.fops = &fops
+	.fops = &fops,
 };
 
 static int __init modrsswitch_init(void)
