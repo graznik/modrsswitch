@@ -282,7 +282,6 @@ static ssize_t driver_write(struct file *f, const char __user *ubuf,
 			    size_t len, loff_t *off)
 {
 	char *kbuf;
-	uint encoder, group, socket, data;
 	int i, data_len;
 
 	kbuf = kmalloc(len, GFP_KERNEL);
