@@ -140,7 +140,7 @@ static int pt2260_init(struct Encoder *pt2260)
 	pt2260->groups = kmalloc(pt2260->ngroups * sizeof(char *), GFP_KERNEL);
 	if (pt2260->groups == NULL) {
 		pr_err("modrss: Cannot kmalloc\n");
-		return -1;
+		return -ENOMEM;
 	}
 	/* Three possible switches per group */
 	pt2260->nsockets = 3;
@@ -148,7 +148,7 @@ static int pt2260_init(struct Encoder *pt2260)
 				  GFP_KERNEL);
 	if (pt2260->sockets == NULL) {
 		pr_err("modrss: Cannot kmalloc\n");
-		return -1;
+		return -ENOMEM;
 	}
 
 	/* Data is either "On" or "Off" */
@@ -156,7 +156,7 @@ static int pt2260_init(struct Encoder *pt2260)
 	pt2260->data = kmalloc(pt2260->ndata * sizeof(char *), GFP_KERNEL);
 	if (pt2260->data == NULL) {
 		pr_err("modrss: Cannot kmalloc\n");
-		return -1;
+		return -ENOMEM;
 	}
 
 	for (i = 0; i < pt2260->ngroups; i++)
@@ -190,7 +190,7 @@ static int pt2262_init(struct Encoder *pt2262)
 	pt2262->groups = kmalloc(pt2262->ngroups * sizeof(char *), GFP_KERNEL);
 	if (pt2262->groups == NULL) {
 		pr_err("modrss: Cannot kmalloc\n");
-		return -1;
+		return -ENOMEM;
 	}
 
 	/* Four possible switches per group */
@@ -199,7 +199,7 @@ static int pt2262_init(struct Encoder *pt2262)
 				  GFP_KERNEL);
 	if (pt2262->sockets == NULL) {
 		pr_err("modrss: Cannot kmalloc\n");
-		return -1;
+		return -ENOMEM;
 	}
 
 	/* Data is either "On" or "Off" */
@@ -207,7 +207,7 @@ static int pt2262_init(struct Encoder *pt2262)
 	pt2262->data = kmalloc(pt2262->ndata * sizeof(char *), GFP_KERNEL);
 	if (pt2262->data == NULL) {
 		pr_err("modrss: Cannot kmalloc\n");
-		return -1;
+		return -ENOMEM;
 	}
 
 	for (i = 0; i < pt2262->ngroups; i++)
@@ -270,7 +270,7 @@ static int socket_send(uint dev, uint group, uint socket, uint data)
 		break;
 	default:
 		pr_err("modrss: Unknown encoder type.\n");
-		return -1;
+		return -EFAULT;
 	}
 
 	/* Check for valid values from user space */
@@ -314,7 +314,7 @@ static ssize_t driver_write(struct file *f, const char __user *ubuf,
 			kbuf[i] = kbuf[i] - '0';
 		} else {
 			pr_err("modrss: Only characters 0-9, a-f, and A-F.\n");
-			return -1;
+			return -EFAULT;
 		}
 	}
 
