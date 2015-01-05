@@ -273,6 +273,14 @@ static int socket_send(uint dev, uint group, uint socket, uint data)
 		return -1;
 	}
 
+	/* Check for valid values from user space */
+	if ((group > (encoder.ngroups - 1)) ||
+	    (socket > (encoder.nsockets - 1)) ||
+	    (data > (encoder.ndata - 1))) {
+		pr_err("Received unknown parameter");
+		return -EFAULT;
+	}
+
 	socket_ctrl(&encoder, group, socket, data);
 
 	return 0;
