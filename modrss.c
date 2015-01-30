@@ -344,8 +344,6 @@ static int __init modrsswitch_init(void)
 
 	pr_debug("modrss: Module registered\n");
 
-	misc_register(&modrss_dev);
-
 	valid = 0;
 	/* Check for valid GPIO */
 	for (i = 0; i < ARRAY_SIZE(valid_gpios); i++) {
@@ -368,6 +366,8 @@ static int __init modrsswitch_init(void)
 	}
 
 	pr_debug("modrss: Using GPIO %d\n", send_pin);
+
+	misc_register(&modrss_dev);
 
 	return 0;
 }
