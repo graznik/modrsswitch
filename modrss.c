@@ -335,6 +335,7 @@ static struct miscdevice modrss_dev = {
 	.minor = MISC_DYNAMIC_MINOR,
 	.name = "rsswitch",
 	.fops = &fops,
+	.mode = S_IWUGO,
 };
 
 static int __init modrsswitch_init(void)
