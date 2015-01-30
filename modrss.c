@@ -49,10 +49,10 @@ static void transmit(int nhigh, int nlow)
 	 parameter in the future, depending on the encoder chip within
 	 the remote control.
 	*/
-	gpio_set_value(send_pin, HIGH);
-	udelay(PULSE_LEN * nhigh);
-	gpio_set_value(send_pin, LOW);
-	udelay(PULSE_LEN * nlow);
+	/* gpio_set_value(send_pin, HIGH); */
+	/* udelay(PULSE_LEN * nhigh); */
+	/* gpio_set_value(send_pin, LOW); */
+	/* udelay(PULSE_LEN * nlow); */
 }
 
 /**
@@ -376,8 +376,8 @@ static void __exit modrsswitch_exit(void)
 {
 	misc_deregister(&modrss_dev);
 
-	gpio_set_value(send_pin, 0);
-	gpio_free(send_pin);
+	/* gpio_set_value(send_pin, 0); */
+	/* gpio_free(send_pin); */
 
 	pr_debug("modrss: Module unregistered\n");
 }
