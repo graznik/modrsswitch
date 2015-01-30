@@ -17,7 +17,7 @@
 
 
 #define GPIO4     4  /* The default GPIO pin */
-#define REPEAT    2  /* Times to repeat the codeword */
+#define REPEAT    4  /* Times to repeat the codeword */
 #define HIGH      1
 #define LOW       0
 #define PULSE_LEN 350
