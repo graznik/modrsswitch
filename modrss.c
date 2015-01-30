@@ -277,7 +277,7 @@ static int socket_send(uint dev, uint group, uint socket, uint data)
 	if ((group > (encoder.ngroups - 1)) ||
 	    (socket > (encoder.nsockets - 1)) ||
 	    (data > (encoder.ndata - 1))) {
-		pr_err("Received unknown parameter");
+		pr_err("Received unknown parameter\n");
 		return -EFAULT;
 	}
 
@@ -342,7 +342,7 @@ static int __init modrsswitch_init(void)
 {
 	int ret, i, valid;
 
-	pr_debug("modrss: Module registered");
+	pr_debug("modrss: Module registered\n");
 
 	misc_register(&modrss_dev);
 
@@ -379,7 +379,7 @@ static void __exit modrsswitch_exit(void)
 
 	misc_deregister(&modrss_dev);
 
-	pr_debug("modrss: Module unregistered");
+	pr_debug("modrss: Module unregistered\n");
 }
 
 module_init(modrsswitch_init);
