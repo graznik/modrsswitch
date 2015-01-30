@@ -374,10 +374,10 @@ static int __init modrsswitch_init(void)
 
 static void __exit modrsswitch_exit(void)
 {
+	misc_deregister(&modrss_dev);
+
 	gpio_set_value(send_pin, 0);
 	gpio_free(send_pin);
-
-	misc_deregister(&modrss_dev);
 
 	pr_debug("modrss: Module unregistered\n");
 }
