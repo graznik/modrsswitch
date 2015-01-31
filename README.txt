@@ -4,7 +4,7 @@ modrsswitch
 Raspberry Pi Linux Kernel Module for controlling remote socket switches.
 
 ==Cross compiling==
-===Intall cross compiler toolchain (x86_64)
+===Intall cross compiler toolchain (x86_64)===
  $ git clone https://github.com/raspberrypi/tools
  $ sudo cp -r tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64 /opt/
 
@@ -33,11 +33,11 @@ Socket group:  1
 Socket socket: 0
 On:    	       1
 
-$ echo "0101" > /dev/rsswitch
+$ echo -n "0101" > /dev/rsswitch
 
 Socket type:   0 (REV 008345)
 Socket group:  1
 Socket socket: 0
 Off:           1
 
-$ echo "0100" > /dev/rsswitch
+$ echo -n "0100" > /dev/rsswitch
