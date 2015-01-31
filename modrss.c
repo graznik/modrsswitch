@@ -16,11 +16,12 @@
 #include <linux/miscdevice.h>
 
 
-#define GPIO4     4  /* The default GPIO pin */
-#define REPEAT    4  /* Times to repeat the codeword */
+#define GPIO4     4    /* The default GPIO pin */
+#define REPEAT    4    /* Times to repeat the codeword */
 #define HIGH      1
 #define LOW       0
 #define PULSE_LEN 350
+#define DATA_LEN  4    /* Socket type, socket group, socket, data */
 /*
  * Each encoder chip used in the power socket remote controls can be described
  * with the following struct.
@@ -290,7 +291,10 @@ static ssize_t driver_write(struct file *f, const char __user *ubuf,
 			    size_t len, loff_t *off)
 {
 	char *kbuf;
-	int i, data_len;
+	int i;
+
+	if ((len != DATA_LEN) || (*off != 0))
+		return -EINVAL;
 
 	kbuf = kmalloc(len, GFP_KERNEL);
 	if (!kbuf)
@@ -302,10 +306,8 @@ static ssize_t driver_write(struct file *f, const char __user *ubuf,
 		return -EFAULT;
 	}
 
-	data_len = strlen(kbuf);
-
 	/* Check for valid hex values from user space */
-	for (i = 0; i < data_len; i++) {
+	for (i = 0; i < DATA_LEN; i++) {
 		if ((kbuf[i] >= 'a') && (kbuf[i] <= 'f')) {
 			kbuf[i] = kbuf[i] - 'a';
 		} else if ((kbuf[i] >= 'A') && (kbuf[i] <= 'F')) {
@@ -314,7 +316,7 @@ static ssize_t driver_write(struct file *f, const char __user *ubuf,
 			kbuf[i] = kbuf[i] - '0';
 		} else {
 			pr_err("modrss: Only characters 0-9, a-f, and A-F.\n");
-			return -EFAULT;
+			return -EINVAL;
 		}
 	}
 
@@ -361,8 +363,8 @@ static int __init modrsswitch_init(void)
 	/* Register GPIO and set to LOW */
 	/* ret = gpio_request_one(send_pin, GPIOF_OUT_INIT_LOW, "send_pin"); */
 	/* if (ret) { */
-	/* 	pr_err("modrss: Unable to request GPIO: %d\n", ret); */
-	/* 	return ret; */
+	/*	pr_err("modrss: Unable to request GPIO: %d\n", ret); */
+	/*	return ret; */
 	/* } */
 
 	pr_debug("modrss: Using GPIO %d\n", send_pin);
