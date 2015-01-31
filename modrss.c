@@ -359,11 +359,11 @@ static int __init modrsswitch_init(void)
 	}
 
 	/* Register GPIO and set to LOW */
-	ret = gpio_request_one(send_pin, GPIOF_OUT_INIT_LOW, "send_pin");
-	if (ret) {
-		pr_err("modrss: Unable to request GPIO: %d\n", ret);
-		return ret;
-	}
+	/* ret = gpio_request_one(send_pin, GPIOF_OUT_INIT_LOW, "send_pin"); */
+	/* if (ret) { */
+	/* 	pr_err("modrss: Unable to request GPIO: %d\n", ret); */
+	/* 	return ret; */
+	/* } */
 
 	pr_debug("modrss: Using GPIO %d\n", send_pin);
 
