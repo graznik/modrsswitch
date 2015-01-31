@@ -1,0 +1,15 @@
+==Prerequisites==
+ # pacman -S lighttpd
+
+==Installation==
+ # cd modrsswitch/example/PythonCGI
+ # mv /etc/lighttpd/lighttpd.conf /etc/lighttpd/lighttpd.conf.orig
+ # cp lighttpd.conf /etc/lighttpd/
+ # cp socket_ctrl.html /srv/http/
+ # mkdir /srv/http/cgi-bin
+ # cp socket_ctrl.py /srv/http/cgi-bin/
+ # ln -s /srv/http/socket_ctrl.html /srv/http/index.html
+ # systemctl start lighttpd
+
+==Usage==
+Use your webbrowser to surf to http://rpi
