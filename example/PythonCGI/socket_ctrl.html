@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <title>PiSocketSwitch</title>
+  </head>
+  <body>
+    <h2>Socket group 0</h2>
+    <form action="/cgi-bin/socket_ctrl.py" method="post" target="_blank">
+      <select name="group0">
+	<option value="0">Socket 0</option>
+	<option value="1">Socket 1</option>
+	<option value="2">Socket 2</option>
+      </select>
+      <input type="submit" name="sock_group0" value="on"/>
+      <input type="submit" name="sock_group0" value="off"/>
+    </form>
+    <h2>Socket group 1</h2>
+    <form action="/cgi-bin/socket_ctrl.py" method="post" target="_blank">
+      <select name="group1">
+	<option value="0">Socket 0</option>
+	<option value="1">Socket 1</option>
+	<option value="2">Socket 2</option>
+      </select>
+      <input type="submit" name="sock_group1" value="on"/>
+      <input type="submit" name="sock_group1" value="off"/>
+    </form>
+    <h2>Socket group 2</h2>
+    <form action="/cgi-bin/socket_ctrl.py" method="post" target="_blank">
+      <select name="group2">
+	<option value="0">Socket 0</option>
+	<option value="1">Socket 1</option>
+	<option value="2">Socket 2</option>
+      </select>
+      <input type="submit" name="sock_group2" value="on"/>
+      <input type="submit" name="sock_group2" value="off"/>
+    </form>
+  </body>
+</html>
