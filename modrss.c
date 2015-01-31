@@ -50,10 +50,10 @@ static void transmit(int nhigh, int nlow)
 	 parameter in the future, depending on the encoder chip within
 	 the remote control.
 	*/
-	gpio_set_value(send_pin, HIGH);
-	udelay(PULSE_LEN * nhigh);
-	gpio_set_value(send_pin, LOW);
-	udelay(PULSE_LEN * nlow);
+	/* gpio_set_value(send_pin, HIGH); */
+	/* udelay(PULSE_LEN * nhigh); */
+	/* gpio_set_value(send_pin, LOW); */
+	/* udelay(PULSE_LEN * nlow); */
 }
 
 /**
@@ -361,11 +361,11 @@ static int __init modrsswitch_init(void)
 	}
 
 	/* Register GPIO and set to LOW */
-	ret = gpio_request_one(send_pin, GPIOF_OUT_INIT_LOW, "send_pin");
-	if (ret) {
-		pr_err("modrss: Unable to request GPIO: %d\n", ret);
-		return ret;
-	}
+	/* ret = gpio_request_one(send_pin, GPIOF_OUT_INIT_LOW, "send_pin"); */
+	/* if (ret) { */
+	/* 	pr_err("modrss: Unable to request GPIO: %d\n", ret); */
+	/* 	return ret; */
+	/* } */
 
 	pr_debug("modrss: Using GPIO %d\n", send_pin);
 
@@ -378,8 +378,8 @@ static void __exit modrsswitch_exit(void)
 {
 	misc_deregister(&modrss_dev);
 
-	gpio_set_value(send_pin, 0);
-	gpio_free(send_pin);
+	/* gpio_set_value(send_pin, 0); */
+	/* gpio_free(send_pin); */
 
 	pr_debug("modrss: Module unregistered\n");
 }
