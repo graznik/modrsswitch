@@ -33,11 +33,8 @@ Socket group:  1
 Socket socket: 0
 On:    	       1
 
+====Local====
 $ echo -n "0101" > /dev/rsswitch
 
-Socket type:   0 (REV 008345)
-Socket group:  1
-Socket socket: 0
-Off:           1
-
-$ echo -n "0100" > /dev/rsswitch
+====Remote====
+$ ssh user@rpi 'echo -n "0101" > /dev/rsswitch'
