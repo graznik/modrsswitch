@@ -223,6 +223,13 @@ static int pt2262_init(struct Encoder *pt2262)
 	return 0;
 }
 
+void free_encoder(struct Encoder *enc)
+{
+	kfree(enc->groups);
+	kfree(enc->sockets);
+	kfree(enc->data);
+}
+
 /**
  * Emulate an encoder chip
  * @param *enc          Pointer to an encoder instance
@@ -283,6 +290,8 @@ static int socket_send(uint dev, uint group, uint socket, uint data)
 	}
 
 	socket_ctrl(&encoder, group, socket, data);
+
+	free_encoder(&encoder);
 
 	return 0;
 }
