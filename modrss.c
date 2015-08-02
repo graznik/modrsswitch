@@ -140,26 +140,21 @@ static int pt2260_init(struct Encoder *pt2260)
 	pt2260->ngroups = 4;
 	pt2260->groups = kmalloc_array(pt2260->ngroups,
 				       sizeof(char *), GFP_KERNEL);
-	if (pt2260->groups == NULL) {
-		pr_err("modrss: Cannot kmalloc\n");
+	if (pt2260->groups == NULL)
 		return -ENOMEM;
-	}
+
 	/* Three possible switches per group */
 	pt2260->nsockets = 3;
 	pt2260->sockets = kmalloc_array(pt2260->nsockets, sizeof(char *),
 				  GFP_KERNEL);
-	if (pt2260->sockets == NULL) {
-		pr_err("modrss: Cannot kmalloc\n");
+	if (pt2260->sockets == NULL)
 		return -ENOMEM;
-	}
 
 	/* Data is either "On" or "Off" */
 	pt2260->ndata = 2;
 	pt2260->data = kmalloc_array(pt2260->ndata, sizeof(char *), GFP_KERNEL);
-	if (pt2260->data == NULL) {
-		pr_err("modrss: Cannot kmalloc\n");
+	if (pt2260->data == NULL)
 		return -ENOMEM;
-	}
 
 	for (i = 0; i < pt2260->ngroups; i++)
 		pt2260->groups[i] = groups[i];
@@ -191,27 +186,21 @@ static int pt2262_init(struct Encoder *pt2262)
 	pt2262->ngroups = 16;
 	pt2262->groups = kmalloc_array(pt2262->ngroups, sizeof(char *),
 				       GFP_KERNEL);
-	if (pt2262->groups == NULL) {
-		pr_err("modrss: Cannot kmalloc\n");
+	if (pt2262->groups == NULL)
 		return -ENOMEM;
-	}
 
 	/* Four possible switches per group */
 	pt2262->nsockets = 4;
 	pt2262->sockets = kmalloc_array(pt2262->nsockets, sizeof(char *),
 					GFP_KERNEL);
-	if (pt2262->sockets == NULL) {
-		pr_err("modrss: Cannot kmalloc\n");
+	if (pt2262->sockets == NULL)
 		return -ENOMEM;
-	}
 
 	/* Data is either "On" or "Off" */
 	pt2262->ndata = 2;
 	pt2262->data = kmalloc_array(pt2262->ndata, sizeof(char *), GFP_KERNEL);
-	if (pt2262->data == NULL) {
-		pr_err("modrss: Cannot kmalloc\n");
+	if (pt2262->data == NULL)
 		return -ENOMEM;
-	}
 
 	for (i = 0; i < pt2262->ngroups; i++)
 		pt2262->groups[i] = groups[i];
