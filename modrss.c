@@ -138,14 +138,15 @@ static int pt2260_init(struct Encoder *pt2260)
 
 	/* Four possible switch groups */
 	pt2260->ngroups = 4;
-	pt2260->groups = kmalloc(pt2260->ngroups * sizeof(char *), GFP_KERNEL);
+	pt2260->groups = kmalloc_array(pt2260->ngroups,
+				       sizeof(char *), GFP_KERNEL);
 	if (pt2260->groups == NULL) {
 		pr_err("modrss: Cannot kmalloc\n");
 		return -ENOMEM;
 	}
 	/* Three possible switches per group */
 	pt2260->nsockets = 3;
-	pt2260->sockets = kmalloc(pt2260->nsockets * sizeof(char *),
+	pt2260->sockets = kmalloc_array(pt2260->nsockets, sizeof(char *),
 				  GFP_KERNEL);
 	if (pt2260->sockets == NULL) {
 		pr_err("modrss: Cannot kmalloc\n");
@@ -154,7 +155,7 @@ static int pt2260_init(struct Encoder *pt2260)
 
 	/* Data is either "On" or "Off" */
 	pt2260->ndata = 2;
-	pt2260->data = kmalloc(pt2260->ndata * sizeof(char *), GFP_KERNEL);
+	pt2260->data = kmalloc_array(pt2260->ndata, sizeof(char *), GFP_KERNEL);
 	if (pt2260->data == NULL) {
 		pr_err("modrss: Cannot kmalloc\n");
 		return -ENOMEM;
@@ -188,7 +189,8 @@ static int pt2262_init(struct Encoder *pt2262)
 
 	/* 16 possible switch groups (A-P in Intertechno code) */
 	pt2262->ngroups = 16;
-	pt2262->groups = kmalloc(pt2262->ngroups * sizeof(char *), GFP_KERNEL);
+	pt2262->groups = kmalloc_array(pt2262->ngroups, sizeof(char *),
+				       GFP_KERNEL);
 	if (pt2262->groups == NULL) {
 		pr_err("modrss: Cannot kmalloc\n");
 		return -ENOMEM;
@@ -196,8 +198,8 @@ static int pt2262_init(struct Encoder *pt2262)
 
 	/* Four possible switches per group */
 	pt2262->nsockets = 4;
-	pt2262->sockets = kmalloc(pt2262->nsockets * sizeof(char *),
-				  GFP_KERNEL);
+	pt2262->sockets = kmalloc_array(pt2262->nsockets, sizeof(char *),
+					GFP_KERNEL);
 	if (pt2262->sockets == NULL) {
 		pr_err("modrss: Cannot kmalloc\n");
 		return -ENOMEM;
@@ -205,7 +207,7 @@ static int pt2262_init(struct Encoder *pt2262)
 
 	/* Data is either "On" or "Off" */
 	pt2262->ndata = 2;
-	pt2262->data = kmalloc(pt2262->ndata * sizeof(char *), GFP_KERNEL);
+	pt2262->data = kmalloc_array(pt2262->ndata, sizeof(char *), GFP_KERNEL);
 	if (pt2262->data == NULL) {
 		pr_err("modrss: Cannot kmalloc\n");
 		return -ENOMEM;
