@@ -24,7 +24,7 @@
 /*
  * Each encoder chip used in the power socket remote controls can be described
  * with the following struct.
-*/
+ */
 struct Encoder {
 	char **groups;    /* Group identifiers                  */
 	uint ngroups;     /* Number of groups                   */
@@ -145,7 +145,7 @@ static int pt2260_init(struct Encoder *pt2260)
 	/* Three possible switches per group */
 	pt2260->nsockets = 3;
 	pt2260->sockets = kmalloc_array(pt2260->nsockets, sizeof(char *),
-				  GFP_KERNEL);
+					GFP_KERNEL);
 	if (pt2260->sockets == NULL)
 		return -ENOMEM;
 
