@@ -43,7 +43,7 @@ static int send_pin = GPIO4; /* The default pin */
 module_param(send_pin, int, 0644);
 MODULE_PARM_DESC(send_pin, "GPIO the 433 MHz sender is connected to");
 
-static void transmit(int nhigh, int nlow)
+static void transmit(int nhigh, int nlow, uint pulse_len)
 {
 	/*
 	 * FIXME: PULSE_LEN is the pulse length in us. This should be a
@@ -51,9 +51,9 @@ static void transmit(int nhigh, int nlow)
 	 the remote control.
 	*/
 	gpio_set_value(send_pin, HIGH);
-	udelay(PULSE_LEN * nhigh);
+	udelay(pulse_len * nhigh);
 	gpio_set_value(send_pin, LOW);
-	udelay(PULSE_LEN * nlow);
+	udelay(pulse_len * nlow);
 }
 
 /**
@@ -61,10 +61,10 @@ static void transmit(int nhigh, int nlow)
  *            _     _
  * Waveform: | |___| |___
  */
-static void send_0(void)
+static void send_0(uint pulse_len)
 {
-	transmit(1, 3);
-	transmit(1, 3);
+	transmit(1, 3, pulse_len);
+	transmit(1, 3, pulse_len);
 }
 
 /**
@@ -72,10 +72,10 @@ static void send_0(void)
  *            ___   ___
  * Waveform: |   |_|   |_
  */
-static void send_1(void)
+static void send_1(uint pulse_len)
 {
-	transmit(3, 1);
-	transmit(3, 1);
+	transmit(3, 1, pulse_len);
+	transmit(3, 1, pulse_len);
 }
 
 /**
@@ -83,10 +83,10 @@ static void send_1(void)
  *            _     ___
  * Waveform: | |___|   |_
  */
-static void send_f(void)
+static void send_f(uint pulse_len)
 {
-	transmit(1, 3);
-	transmit(3, 1);
+	transmit(1, 3, pulse_len);
+	transmit(3, 1, pulse_len);
 }
 
 /**
@@ -96,12 +96,12 @@ static void send_f(void)
  *                       _
  * Waveform Protocol 2: | |__________
  */
-static void send_sync(void)
+static void send_sync(uint pulse_len)
 {
-	transmit(1, 31);
+	transmit(1, 31, pulse_len);
 }
 
-static void send_tris(char *codeword)
+static void send_tris(char *codeword, uint pulse_len)
 {
 	int i = 0;
 	unsigned long flags;
@@ -110,18 +110,18 @@ static void send_tris(char *codeword)
 	while (codeword[i] != '\0') {
 		switch (codeword[i]) {
 		case '0':
-			send_0();
+			send_0(pulse_len);
 			break;
 		case '1':
-			send_1();
+			send_1(pulse_len);
 			break;
 		case 'F':
-			send_f();
+			send_f(pulse_len);
 			break;
 		}
 		i++;
 	}
-	send_sync();
+	send_sync(pulse_len);
 	local_irq_restore(flags);
 }
 
@@ -164,6 +164,8 @@ static int pt2260_init(struct Encoder *pt2260)
 
 	for (i = 0; i < pt2260->ndata; i++)
 		pt2260->data[i] = data[i];
+
+	pt2260->pulse_len = 350;
 
 	return 0;
 }
@@ -211,6 +213,8 @@ static int pt2262_init(struct Encoder *pt2262)
 	for (i = 0; i < pt2262->ndata; i++)
 		pt2262->data[i] = data[i];
 
+	pt2262->pulse_len = 350;
+
 	return 0;
 }
 
@@ -251,7 +255,7 @@ static int socket_ctrl(struct Encoder *enc, uint group, uint socket, uint data)
 
 	/* Send the codeword */
 	for (i = 0; i < REPEAT; i++)
-		send_tris(codeword);
+		send_tris(codeword, enc->pulse_len);
 
 	return 0;
 }
