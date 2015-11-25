@@ -20,7 +20,6 @@
 #define REPEAT    4    /* Times to repeat the codeword */
 #define HIGH      1
 #define LOW       0
-#define PULSE_LEN 350
 #define DATA_LEN  4    /* Socket type, socket group, socket, data */
 /*
  * Each encoder chip used in the power socket remote controls can be described
